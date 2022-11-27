@@ -31,7 +31,8 @@
     <p>! : Sets the buffer to the current tape value</p>
     <p>^ : Adds 1 to the current tape value</p>
     <p>v : Removes 1 from the current tape value</p>
-    <p>x : If lowercase, sets the buffer to 0, if uppercase, sets the tape value to 0</p>
+    <p>_ : Sets the current tape value to 0</p>
+    <p>\ : Sets the current buffer value to 0</p>
     <p># : Warps the program's execution to the current tape value, will be explained at the end with more detail</p>
     <p>$ : Skips N instructions after IF the current tape value is 0, N being the current tape value</p>
     <p>$ : Same as $ but only runs if the tape value isn't 0.</p>
@@ -126,8 +127,8 @@
                 if (char == "!") buffer = tapeVal;
                 if (char == "^") tape[tapeLoc] += 1;
                 if (char == "v") tape[tapeLoc] -= 1;
-                if (char == "x") buffer = 0;
-                if (char == "X") tape[tapeLoc] = 0;
+                if (char == "\\") buffer = 0;
+                if (char == "_") tape[tapeLoc] = 0;
                 if (char == "%") buffer = tapeVal % buffer
                 if (char == "$" && tapeVal == 0) { moveOn = buffer }
                 if (char == ";" && !(tapeVal == 0)) { moveOn = buffer }

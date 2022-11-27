@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>normallang</title>
+</head>
+
+<body>
+    <textarea id="input" cols="40" name="freeform" rows="6" placeholder="Enter code here.."></textarea>
+
+    <p id="output" style="text-align: left;"><strong>Output text</strong></p>
+    <button id="run">Run code</button>
+    <button id="stop">Stop code</button>
+
+    <p>&nbsp;</p>
+    <p>Instructions:</p>
+    <p>+ : Increment buffer by 1</p>
+    <p>- : Decrement buffer by 1</p>
+    <p>= : Set current tape value to the buffer, and reset the buffer</p>
+    <p>&gt; : Move to the right on the tape by 1 space</p>
+    <p>&lt; : Move to the left on the tape by 1 space</p>
+    <p>[ : Opens a loop, loops will be explained at the end with other fundamentals</p>
+    <p>] : Closes a loop</p>
+    <p>, : Outputs a character based on the current tape value in order of 0-9, a-z</p>
+    <p>. : Outputs the current tape value as a number</p>
+    <p>* : Multiplies the buffer by the current tape value, and keeps the current tape value</p>
+    <p>/ : Same as * but with division</p>
+    <p>! : Sets the buffer to the current tape value</p>
+    <p>^ : Adds 1 to the current tape value</p>
+    <p>v : Removes 1 from the current tape value</p>
+    <p>x : If lowercase, sets the buffer to 0, if uppercase, sets the tape value to 0</p>
+    <p># : Warps the program's execution to the current tape value, will be explained at the end with more detail</p>
+    <p>$ : Skips N instructions after IF the current tape value is 0, N being the current tape value</p>
+    <p>$ : Same as $ but only runs if the tape value isn't 0.</p>
+    <p>& : Resets the current output, useful for infinite loop programs which you don't want to just append the output
+        to.</p>
+    <p>| : Outputs the next character, and then skips it in case it is an instruction</p>
+    <p>&nbsp;</p>
+    <p><strong>Fundamentals:</strong></p>
+    <p>&nbsp;</p>
+    <p>This programming language runs on a tape of data 255 spaces long, meaning that if you go back one space, you will
+        end at the same space as if you go forward 254 times, these tapes store data in the form of numbers and can
+        handle any 32 bit integer.</p>
+    <p>Loops: Loops are pretty simple, they will run the code inside once but repeat until the current tape value is 0,
+        the loop code will always run once no matter what</p>
+        <p>Characters:</p>
+        <p>1-10 are 0-9, simple</p>
+        <p>11:A</p>
+        <p>12:B</p>
+        <p>13:C</p>
+        <p>14:D</p>
+        <p>15:E</p>
+        <p>16:F</p>
+        <p>17:G</p>
+        <p>18:H</p>
+        <p>19:I</p>
+        <p>20:J</p>
+        <p>21:K</p>
+        <p>22:L</p>
+        <p>23:M</p>
+        <p>24:N</p>
+        <p>25:O</p>
+        <p>26:P</p>
+        <p>27:Q</p>
+        <p>28:R</p>
+        <p>29:S</p>
+        <p>30:T</p>
+        <p>31:U</p>
+        <p>32:V</p>
+        <p>33:W</p>
+        <p>34:X</p>
+        <p>35:Y</p>
+        <p>36:Z</p>
+    <script>
+        const input = document.getElementById('input');
+        const output = document.getElementById('output');
+        const runButton = document.getElementById('run');
+        const stopButton = document.getElementById('stop');
+
+        let running = true;
+
+        async function compile(text) {
+            let chars = text.split('')
+            let loc = 0
+            let buffer = 0
+            let tape = [...Array(255)].map(x => 0)
+            let tapeLoc = 0;
+            let moveOn = 0;
+            let loopList = [];
+            let char = chars[loc]
+            let out = "";
+            let resetAfter = false;
+
+            while (loc <= chars.length) {
+                if (!running) {
+                    running = true;
+                    break;
+                }
+                if (moveOn) {moveOn -= 1; continue;}
+                char = chars[loc];
+                tapeVal = tape[tapeLoc];
+                if (resetAfter) { resetAfter = false; out = '' }
+                if (char == "+") buffer += 1;
+                if (char == "-") buffer -= 1;
+                if (char == "=") {
+                    tape[tapeLoc] = buffer;
+                    buffer = 0;
+                }
+                if (char == ">") tapeLoc += 1;
+                if (char == "<") tapeLoc -= 1;
+                if (tapeLoc > 255) tapeLoc = 0;
+                if (tapeLoc < 0) tapeLoc = 255;
+                if (char == "[") loopList.push(loc);
+                if (char == "]" && tapeVal != 0) { loc = loopList[loopList.length - 1]; }
+                if (char == ",") out += tapeVal.toString(36);
+                if (char == ".") out += tapeVal;
+                if (char == "*") {
+                    buffer = buffer * tapeVal;
+                }
+                if (char == "/") {
+                    buffer = buffer / tapeVal;
+                }
+                if (char == "!") buffer = tapeVal;
+                if (char == "^") tape[tapeLoc] += 1;
+                if (char == "v") tape[tapeLoc] -= 1;
+                if (char == "x") buffer = 0;
+                if (char == "X") tape[tapeLoc] = 0;
+                if (char == "%") buffer = tapeVal % buffer
+                if (char == "$" && tapeVal == 0) { moveOn = buffer }
+                if (char == ";" && !(tapeVal == 0)) { moveOn = buffer }
+                if (char == "&") resetAfter = true;
+                if (char == "|") {
+                    out += chars[loc + 1];
+                    moveOn = 1;
+                }
+                loc += 1;
+                output.innerText = out;
+                console.log(out);
+
+                await new Promise(res => setTimeout(res, 10))
+                // console.log(`Buffer: ${buffer} Value: ${tapeVal}`)
+            }
+            return out
+        }
+        runButton.onclick = () => output.innerText = compile(input.value);
+        stopButton.onclick = () => running = false;
+    </script>
+</body>
+
+</html>

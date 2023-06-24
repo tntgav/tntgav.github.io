@@ -43,6 +43,9 @@ body {
 	font-weight: 200;
 }
 
+.credits {
+	font-weight: 200;
+}
 
 /* Scrolling Indicator */
 @keyframes bounce {

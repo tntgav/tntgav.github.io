@@ -1,0 +1,95 @@
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	color: #212121;
+	font-family: 'Raleway', sans-serif;
+}
+
+/* Logo */
+.logo {
+	position: fixed;
+	top: 0;
+	left: 0;
+	margin: 15px;
+	width: 20%;
+}
+
+/* Text */
+.qna-set {
+	border-radius: 10px;
+	margin: 15px;
+	padding: 10px;
+	transition: box-shadow 0.3s, background-color 0.3s;
+	box-shadow: 0 0 5px 5px #2121212d;
+	background-color: #2121212d;
+}
+
+.qna-set h3 {
+	font-weight: 400;
+}
+
+.qna-set h4 {
+	font-weight: 300;
+}
+
+.individual {
+	margin: 15px;
+	margin-top: 30px;
+}
+
+.individual pre {
+	font-weight: 200;
+}
+
+
+/* Scrolling Indicator */
+@keyframes bounce {
+  0% {
+    transform: translateY(-50%);
+	}
+
+	50% {
+    transform: translateY(-30%);
+	}
+
+  100% {
+    transform: translateY(-50%);
+	}
+}
+
+@keyframes stopbounce {
+  from {
+    transform: translateY(-50%);
+	}
+
+  to {
+    transform: translateY(-30%);
+	}
+}
+
+#scroll-indicator {
+  transform: translateY(-30%);
+  animation: 0.7s linear 0 bounce;
+  animation-iteration-count: infinite;
+  transition: opacity 0.25s, transform 0.25s;
+  position: absolute;
+  border-radius: 50%;
+  padding: 48px;
+  width: auto;
+  left: 50%;
+  top: 94.5vh;
+  border: none;
+  background-color: #00000000 !important;
+	color: #212121;
+}
+
+.used {
+	opacity: 0;
+}
+
+#scroll-indicator:hover {
+	animation: 0.25s linear 0 stopbounce;
+	animation-iteration-count: 1;
+}
